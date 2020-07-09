@@ -1,0 +1,49 @@
+﻿@page "/covidfaq"
+
+@inject HttpClient Http
+
+<div class="d-flex justify-content-center">
+    <img src="https://www.redaccionmedica.com/images/destacados/coronavirus-mapa-casos-muertes-curados-todo-mundo-3321.jpg" alt="Image" style="width:80%; height:300px" />
+</div>
+<br />
+<div class="d-flex justify-content-center">
+    <h1>Frequently asked Questions on Covid-19 (Martín Eduardo Camilo)</h1>
+</div>
+<hr />
+
+@if (questionList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var question in questionList)
+    {
+        <div class="card">
+            <h3 class="card-header">
+                @question.Question
+            </h3>
+            <div class="card-body">
+                <p class="card-text">@question.Answer</p>
+            </div>
+        </div>
+        <br />
+    }
+}
+
+@code {
+
+    private FAQ[] questionList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        questionList = await Http.GetFromJsonAsync<FAQ[]>("https://functionapp20200709003639.azurewebsites.net/api/covidFAQ");
+    }
+
+    public class FAQ
+    {
+        public string Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+    }
+}
